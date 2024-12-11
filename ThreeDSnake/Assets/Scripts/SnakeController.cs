@@ -10,9 +10,14 @@ public class SnakeController : MonoBehaviour
     public float segmentDistance = 0.5f;
     private List<Transform> bodySegments = new List<Transform>();
 
+
+    private GroundController groundController;
+
     void Start()
     {
         bodySegments.Add(transform);
+
+        groundController = FindAnyObjectByType<GroundController>();
     }
 
     void Update()
@@ -29,7 +34,7 @@ public class SnakeController : MonoBehaviour
         if (Input.GetKey(KeyCode.RightArrow))
             transform.Rotate(Vector3.up, turnSpeed * Time.deltaTime);
 
-        
+
         UpdateBodySegments();
     }
 
@@ -74,7 +79,11 @@ public class SnakeController : MonoBehaviour
         if (other.gameObject.CompareTag("Food"))
         {
             AddSegment();
-            Destroy(other.gameObject);
+            speed += 0.1f;
+            if (groundController != null)
+            {
+                groundController.MoveFoodToNewPosition(); // Перемещаем еду
+            }
         }
     }
 }
